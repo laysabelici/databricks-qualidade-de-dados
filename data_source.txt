@@ -1,0 +1,20 @@
+# 📂 Fonte de Dados
+
+Este projeto utiliza dados públicos disponibilizados pela **ANEEL (Agência Nacional de Energia Elétrica)**.  
+O caminho do DataFrame está registrado no arquivo `data_source.txt` para facilitar a rastreabilidade e garantir que qualquer pessoa possa acessar a mesma base.
+
+### 🔗 Link oficial da fonte
+[Ocorrências Emergenciais na Rede de Distribuição — 2026]
+(https://dadosabertos.aneel.gov.br/dataset/ced06b4c-45a5-4cae-8a7e-f576ffc3b412/resource/040c840a-b9fa-4c63-bd3c-f1a99640366b/download/ocorrencias-emergenciais-rede-distribuicao-2026.zip)
+
+---
+
+## 📝 Objetivo do arquivo `data_source.txt`
+- **Centralizar o caminho da base de dados** utilizada no framework.  
+- **Facilitar a atualização**: caso a fonte mude, basta alterar o arquivo `.txt`.  
+- **Garantir transparência**: qualquer colaborador sabe exatamente de onde vêm os dados.  
+
+---
+
+## ⚠️ Observação
+Os dados são públicos e podem ser atualizados pela ANEEL. É recomendável sempre verificar se há novas versões disponíveis no portal de [dados abertos](ca://s?q=Portal_de_dados_abertos_ANEEL).
