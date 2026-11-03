@@ -1,9 +1,8 @@
 <div align="center">
 
-# 🔎 Data Quality Framework
+# Data Quality Framework | Data Engineering, ML & LLM
 
-**Data quality engineering with PySpark and Databricks**  
-*A modular framework that turns DataFrames into technical evidence about data quality.*
+A modular, evidence-first data quality framework for Databricks and PySpark, spanning profiling, monitoring, machine learning, RAG, and optional LLM-assisted analysis.
 
 [🇧🇷 Português](README.md) · [🇺🇸 English](README.en.md)
 
@@ -12,236 +11,97 @@
 ![Databricks](https://img.shields.io/badge/Databricks-Notebooks-FF3621?logo=databricks&logoColor=white)
 ![Status](https://img.shields.io/badge/Status-In%20Development-blue)
 
-[Overview](#-overview) · [Architecture](#-architecture) · [Profiles](#-modules-and-profiles) · [Getting started](#-getting-started) · [Roadmap](#-roadmap) · [Contributing](#-contributing)
-
 </div>
 
----
+**Status:** notebooks developed incrementally; integrated execution and production readiness are not yet validated. Module 13 was deferred.
 
-## 🎯 Overview
+## Design principles
 
-**Data Quality Framework** is a data engineering project built with **Databricks, Apache Spark, and PySpark** to systematically inspect the schema, distributions, structural patterns, duplicates, and consistency of Spark DataFrames.
+- **Evidence before conclusions:** statistical anomalies do not necessarily imply data errors.
+- **Domain-agnostic:** no hardcoded rules specific to ANEEL or any other dataset.
+- **Explicit contracts:** acceptance criteria require human definition and approval.
+- **Controlled LLM usage:** disabled by default, grounded in bounded evidence, with auditability and no automatic remediation.
+- **Distributed processing:** use Spark DataFrame APIs compatible with Databricks Unity Catalog.
 
-Its core principle is to **separate technical observations from business interpretation**: unusual values, repeated records, or unexpected relationships are **not automatically proof of invalid data**. Explicit domain rules can be introduced when appropriate.
-
-The project aims to be **domain-agnostic, modular, reusable, metrics-driven, and suitable for distributed processing**. It is under active development: integrated automation, a consolidated quality score, and historical monitoring are planned capabilities, not completed features.
-
-> **Design principle:** surface evidence about data quality without assuming column semantics or automatically penalizing legitimate statistical behavior.
-
-## 🧭 Quick navigation
-
-| I want to... | Go to |
-|---|---|
-| Understand the design | [Architecture](#-architecture) |
-| Explore the metrics | [Modules and Profiles](#-modules-and-profiles) |
-| Browse notebooks | [Repository structure](#-repository-structure) |
-| Run a Profile | [Getting started](#-getting-started) |
-| See upcoming work | [Roadmap](#-roadmap) |
-| Contribute | [Contributing](#-contributing) |
-
-## 🏗️ Architecture
+## Architecture
 
 ```mermaid
 flowchart TD
-    A[Data sources] --> B[01 Data Ingestion]
-    B --> C[02 Data Preparation]
-    L[00 Framework Config / shared helpers] -.-> B
-    L -.-> C
-    C --> D[03 Schema]
-    C --> E[04 Distribution]
-    C --> F[05 Pattern]
-    C --> G[06 Duplicity]
-    C --> H[07 Consistency]
-    C -.-> I[08 Outlier - planned]
-    C -.-> J[09 Correlation - planned]
-    D --> K[Structured outputs]
-    E --> K
-    F --> K
-    G --> K
-    H --> K
-    I -.-> K
-    J -.-> K
-    K -.-> M[10 Data Quality Score - planned]
-    M -.-> N[Dashboards / history / alerts - planned]
+    A[00 Shared configuration] -.-> B[01 Ingestion]
+    B --> C[02 Preparation]
+    C --> D[03-09 Quality profiles]
+    D --> E[10 Score]
+    E --> F[11 Orchestration / 12 Reports / 14 Observability]
+    F --> G[15 AI Analyst / 16 ML Anomalies / 17 Drift]
+    G --> H[18 Rule Recommendations / 19 Root Cause]
+    H --> I[20 RAG]
+    I --> J[21 Conversational Quality]
+    F --> K[22 Data Contracts]
+    K --> L[23 Quality Gate - planned]
+    F -. evidence .-> J
+    A -. shared utilities .-> J
 ```
 
-**Layer responsibilities:**
+## Notebook catalog
 
-- **Ingestion:** makes a source DataFrame available. The current example reads a CSV; general-purpose connectors are future work.
-- **Preparation:** validates the input, inspects the schema, classifies data types, and exposes `df_prepared` plus shared metadata.
-- **Framework Config:** centralizes imports and reusable helpers, reducing code duplication across Profiles.
-- **Profiles:** produce dimension-specific metrics while distinguishing *exploratory signals*, *hypotheses*, and *explicit-rule violations*.
-- **Consolidation and consumption:** planned layers for scoring, historical analysis, and visualization.
+| No. | Notebook | Purpose | Status |
+|---|---|---|---|
+| `00` | `FRAMEWORK_CONFIG` | Shared configuration and helpers | Under validation |
+| `01` | `DATA_INGESTION` | Data ingestion | Under validation |
+| `02` | `DATA_PREPARATION` | Data preparation | Under validation |
+| `03` | `SCHEMA_PROFILE` | Schema and completeness | Under validation |
+| `04` | `DISTRIBUTION_PROFILE` | Distributions and concentration | Under validation |
+| `05` | `PATTERN_PROFILE` | Value patterns | Under validation |
+| `06` | `DUPLICITY_PROFILE` | Duplicates and candidate keys | Under validation |
+| `07` | `CONSISTENCY_PROFILE` | Consistency | Under validation |
+| `08` | `OUTLIER_PROFILE` | Outlier analysis | Under validation |
+| `09` | `CORRELATION_PROFILE` | Associations and correlations | Under validation |
+| `10` | `DATA_QUALITY_SCORE` | Explainable quality score | Under validation |
+| `11` | `FRAMEWORK_ORCHESTRATOR` | Orchestration | Under validation |
+| `12` | `DATA_QUALITY_REPORT` | Reports and indicators | Under validation |
+| `13` | `DATA_QUALITY_HISTORY` | History (deferred) | Deferred |
+| `14` | `DATA_QUALITY_OBSERVABILITY` | Observability | Under validation |
+| `15` | `AI_DATA_QUALITY_ANALYST` | AI-assisted analysis | Under validation |
+| `16` | `ML_ANOMALY_DETECTION` | ML anomaly detection | Under validation |
+| `17` | `DATA_QUALITY_DRIFT_DETECTION` | Drift detection | Under validation |
+| `18` | `AI_RULE_RECOMMENDATION` | AI rule recommendations | Under validation |
+| `19` | `AI_ROOT_CAUSE_ANALYSIS` | Root-cause hypotheses | Under validation |
+| `20` | `DATA_QUALITY_RAG` | Knowledge retrieval (RAG) | Under validation |
+| `21` | `CONVERSATIONAL_DATA_QUALITY` | Evidence-backed conversational queries | Under validation |
+| `22` | `DATA_QUALITY_CONTRACTS` | Contracts and rule validation | Under validation |
 
-Profiles are **analytically independent of one another**, but share the preparation and configuration layers. In the current implementation, running a Profile loads upstream notebooks through `%run`.
+## The role of the LLM
 
-## 📊 Modules and Profiles
+The LLM is an **optional reasoning and natural-language interface**, not a substitute for deterministic quality measurements. Modules 15, 18, 19, 20, and 21 explore assisted interpretation, rule proposals, root-cause hypotheses, retrieval, and conversational answers. Outputs must be checked against available evidence; suggestions and hypotheses are **not automatically approved facts**.
 
-| Module | Purpose | Project status |
-|---|---|---|
-| [01 · Data Ingestion](notebook/01_DATA_INGESTION.ipynb) | Load a source DataFrame | Implemented for the example source |
-| [02 · Data Preparation](notebook/02_DATA_PREPARATION.ipynb) | Schema, types, eligibility, and input contract | Implemented |
-| [03 · Schema Profile](notebook/03_SCHEMA_PROFILE.ipynb) | Completeness, nulls, blanks, cardinality, and types | Implemented |
-| [04 · Distribution Profile](notebook/04_DISTRIBUTION_PROFILE.ipynb) | Frequencies, concentration, diversity, entropy, and statistics | Implemented; evolving |
-| [05 · Pattern Profile](notebook/05_PATTERN_PROFILE.ipynb) | Length, character composition, patterns, and deviations | Implemented; evolving |
-| [06 · Duplicity Profile](notebook/06_DUPLICITY_PROFILE.ipynb) | Full-row duplication, uniqueness, and candidate keys | Implemented; undergoing validation |
-| [07 · Consistency Profile](notebook/07_CONSISTENCY_PROFILE.ipynb) | Intrinsic signals, candidate dependencies, and explicit temporal rules | Implemented; undergoing validation |
-| 08 · Outlier Profile | IQR, Z-scores, and robust outlier detection | Planned |
-| 09 · Correlation Profile | Associations between variables and potential redundancy | Planned |
-| 10 · Data Quality Score | Explainable aggregation with applicability rules | Planned |
+Module **21** reads bounded outputs from reports, observability, AI diagnostics, root-cause analysis, and RAG. It exposes `dq_chat_sources_df`, `dq_chat_evidence_df`, `dq_chat_responses_df`, and `dq_chat_audit_df`. The LLM integration is disabled by default.
 
-### What does each Profile answer?
+## Getting started
 
-<details>
-<summary><strong>03 · Schema — Are data structurally complete?</strong></summary>
+1. Import the notebooks into a Databricks workspace.
+2. Place the consolidated `00_FRAMEWORK_CONFIG` notebook in the shared `bibliotecas` folder, matching the `%run` paths in dependent notebooks.
+3. Configure the data source in module 01, then run preparation (02).
+4. Execute relevant profiles (03–09), then reporting and analytical modules as needed.
+5. Enable optional LLM functionality **only after** configuring an authorized HTTPS endpoint and secrets. Never commit credentials.
 
-Examines types, null and blank values, completeness, distinct counts, and cardinality. Completeness describes data presence; its meaning depends on how attributes are used.
+> The exact folder structure and `%run` paths must be checked against your workspace. Notebooks have been syntax-checked in parts, but this is not a claim of end-to-end Databricks validation.
 
-</details>
+## Demonstration dataset
 
-<details>
-<summary><strong>04 · Distribution — How are values distributed?</strong></summary>
+The project has used a public ANEEL emergency occurrences dataset for exploratory development. This is an **example**, not a domain-specific dependency. Any data use must respect the original source's license and privacy requirements.
 
-Computes frequencies, most common values, Top N concentration, Shannon entropy, and numeric statistics. Concentration or diversity alone do not indicate poor quality.
+## Roadmap
 
-</details>
+- [ ] Run end-to-end integration tests in Databricks Free Edition.
+- [ ] Verify contracts between notebook outputs and consumers.
+- [ ] Implement module 23: Data Quality Gate.
+- [ ] Add lineage, evaluation of AI outputs, and dashboard interfaces.
+- [ ] Define reproducible tests and CI checks.
 
-<details>
-<summary><strong>05 · Pattern — Which structures occur in values?</strong></summary>
+## Responsible use
 
-Examines lengths, character composition, and patterns such as `LLLNNN`, including prevalence and structural deviations. An uncommon pattern is an investigation signal, not proof of invalidity.
+No universal quality acceptance percentage is assumed. Thresholds, policies, and contract approval belong to data owners. Automated remediation, persistent storage, and external LLM calls must be explicitly enabled and governed.
 
-</details>
+## Contributing
 
-<details>
-<summary><strong>06 · Duplicity — Are records repeated, and are there potential identifiers?</strong></summary>
-
-Separates **rows belonging to duplicate groups** from **excess duplicate rows**, assesses attribute uniqueness, and explores single-column or composite candidate keys. Legitimate repetitions must not be automatically labeled errors.
-
-</details>
-
-<details>
-<summary><strong>07 · Consistency — Are values and relationships coherent?</strong></summary>
-
-Investigates blank strings, surrounding whitespace, special numeric values, candidate functional dependencies, and explicitly configured temporal rules. Distinguishes `SINAL_EXPLORATORIO` from `REGRA_EXPLICITA` in the current notebook outputs.
-
-</details>
-
-## 🗂️ Repository structure
-
-```text
-databricks-qualidade-de-dados/
-├── README.md
-├── README.en.md                  # English documentation (this bundle)
-├── bibliotecas/
-│   └── 00_FRAMEWORK_CONFIG.ipynb
-└── notebook/
-    ├── 01_DATA_INGESTION.ipynb
-    ├── 02_DATA_PREPARATION.ipynb
-    ├── 03_SCHEMA_PROFILE.ipynb
-    ├── 04_DISTRIBUTION_PROFILE.ipynb
-    ├── 05_PATTERN_PROFILE.ipynb
-    ├── 06_DUPLICITY_PROFILE.ipynb
-    └── 07_CONSISTENCY_PROFILE.ipynb
-```
-
-> This tree highlights the **main files covered by this documentation**, rather than every repository file. Modules 08–10, orchestration, and monitoring artifacts remain on the roadmap.
-
-## ▶️ Getting started
-
-**Requirements:** a Databricks environment supporting Python/PySpark notebooks, access to an input dataset, and read permissions. Development also considers **Databricks Free Edition**, within its resource limits.
-
-1. Import or synchronize the repository into a Databricks **Git Folder**.
-2. Open [`01_DATA_INGESTION.ipynb`](notebook/01_DATA_INGESTION.ipynb) and **update the input path** to a file accessible from your workspace. The current example uses a Brazilian electricity-distribution emergency-events CSV (ANEEL) with `;` as its separator.
-3. Check shared imports and functions in [`bibliotecas/00_FRAMEWORK_CONFIG.ipynb`](bibliotecas/00_FRAMEWORK_CONFIG.ipynb). Newer Profiles may require additional shared helpers.
-4. Run a Profile, such as `07_CONSISTENCY_PROFILE`, from its first cell. The current execution chain is:
-
-   ```text
-   07_CONSISTENCY_PROFILE
-      └── %run 02_DATA_PREPARATION
-             └── %run 01_DATA_INGESTION
-                    └── %run 00_FRAMEWORK_CONFIG
-   ```
-
-5. Inspect the resulting DataFrames and validate the metrics against controlled samples before processing large datasets.
-
-**Operational notes:** `%run` paths depend on folder layout; the ANEEL dataset is a **case study**, not a conceptual dependency of the Profiles. Other data sources currently require manual ingestion changes. Operations such as `countDistinct`, `groupBy`, and pairwise analysis can trigger Spark shuffles and require tuning.
-
-### Example metrics
-
-| Dimension | Example metrics | Interpretation |
-|---|---|---|
-| Schema | Completeness %, nulls, distinct counts | Presence and structure |
-| Distribution | Top 1/3/5, entropy, mean, dispersion | Value behavior |
-| Pattern | Dominant pattern, diversity, deviations | Structural regularity |
-| Duplicity | Excess rows, duplicate groups, uniqueness | Repetition and potential identifiers |
-| Consistency | Intrinsic signals, functional conflicts, explicit-rule violations | Coherence and evidence to investigate |
-
-**Important:** these metrics **do not yet constitute a validated overall quality score**. A future score will require documented weights, applicability rules, denominators, and acceptance criteria.
-
-## 🧪 Engineering principles
-
-- **Domain independence:** analyses must not require prior knowledge of column names or business meaning.
-- **Separation of concerns:** shared helpers live in the library; Profile-specific execution and metrics remain in each notebook.
-- **Transparency:** document the analyzed population, applicability, and limitations of every metric.
-- **Responsible interpretation:** an outlier, correlation, repetition, or rare pattern is not automatically a data error.
-- **Scalability:** prefer distributed operations and avoid collecting full datasets to the driver.
-- **Reproducibility:** document parameters, versions, and execution assumptions.
-
-### Notebook documentation convention
-
-Every analytical cell answers four questions:
-
-```text
-O QUE FAZ?             / WHAT DOES IT DO?
-COMO FAZ?              / HOW DOES IT WORK?
-POR QUE É IMPORTANTE?  / WHY DOES IT MATTER?
-PERGUNTA RESPONDIDA?   / WHICH QUESTION DOES IT ANSWER?
-```
-
-This supports maintenance, technical review, auditing, and educational use.
-
-## 🗺️ Roadmap
-
-- [x] Modular architecture and shared preparation
-- [x] Schema Profile
-- [x] Distribution Profile — initial implementation
-- [x] Pattern Profile — initial implementation
-- [x] Duplicity Profile — initial implementation
-- [x] Consistency Profile — initial implementation
-- [ ] Mathematical and performance validation of existing Profiles
-- [ ] Outlier Profile
-- [ ] Correlation Profile
-- [ ] Standardized output contracts and automated tests
-- [ ] Explainable, configurable Data Quality Score
-- [ ] Integrated orchestration and execution
-- [ ] Historical persistence in Delta Lake
-- [ ] Dashboards, alerts, and monitoring
-- [ ] Parameterized ingestion for multiple sources
-
-*An initial implementation marked complete does not imply production validation.*
-
-## 🛠️ Technology stack
-
-**Currently used:** Python, PySpark, Apache Spark, and Databricks.  
-**Planned extensions:** Delta Lake, Databricks Workflows, and SQL queries/visualizations.
-
-## 🤝 Contributing
-
-Ideas, technical discussions, and contributions are welcome. Consider opening an [issue](https://github.com/laysabelici/databricks-qualidade-de-dados/issues) describing the problem or proposal before making significant architectural changes.
-
-Please preserve domain independence, document the mathematical interpretation of metrics, keep shared utilities separate from Profiles, and include examples or tests where practical.
-
-## 📜 License
-
-The original README states an intention to use the **MIT License**. Before presenting this as the repository's effective license, confirm that a corresponding `LICENSE` file exists at the repository root.
-
----
-
-<div align="center">
-
-**Data Quality Framework · Evidence-driven data engineering**
-
-[🇧🇷 Ler em português](README.md) · [Back to top](#-data-quality-framework)
-
-</div>
+Issues and pull requests are welcome. Please include reproducible examples, expected behavior, and notes about Databricks runtime compatibility.
