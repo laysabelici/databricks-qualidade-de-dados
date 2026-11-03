@@ -9,11 +9,19 @@ A modular, evidence-first data quality framework for Databricks and PySpark, spa
 ![Python](https://img.shields.io/badge/Python-PySpark-3776AB?logo=python&logoColor=white)
 ![Apache Spark](https://img.shields.io/badge/Apache%20Spark-Data%20Processing-E25A1C?logo=apachespark&logoColor=white)
 ![Databricks](https://img.shields.io/badge/Databricks-Notebooks-FF3621?logo=databricks&logoColor=white)
-![Status](https://img.shields.io/badge/Status-In%20Development-blue)
+![Status](https://img.shields.io/badge/Status-Em%20desenvolvimento-blue)
 
 </div>
 
 **Status:** notebooks developed incrementally; integrated execution and production readiness are not yet validated. Module 13 was deferred.
+
+## Framework demo — 15-second MVP
+
+[![Watch the Data Quality conversational MVP](video_mvp/mvp_preview.png)](video_mvp/mvp_data_quality_15s.mp4)
+
+**[▶ Watch the 15-second demonstration](video_mvp/mvp_data_quality_15s.mp4)**
+
+The video illustrates a conversational data quality experience with questions, evidence-backed answers, and traceability. **Visual prototype using simulated data; not a recording of a live Databricks execution.**
 
 ## Design principles
 
