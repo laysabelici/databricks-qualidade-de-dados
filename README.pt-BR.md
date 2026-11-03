@@ -6,9 +6,10 @@ Framework modular de qualidade de dados em Databricks e PySpark, com profiling, 
 
 [🇧🇷 Português](README.md) · [🇺🇸 English](README.en.md)
 
-![Databricks](https://img.shields.io/badge/Databricks-PySpark-FF3621?logo=databricks&logoColor=white)
-![Python](https://img.shields.io/badge/Python-3-3776AB?logo=python&logoColor=white)
-![Status](https://img.shields.io/badge/Status-Under%20Development-blue)
+![Python](https://img.shields.io/badge/Python-PySpark-3776AB?logo=python&logoColor=white)
+![Apache Spark](https://img.shields.io/badge/Apache%20Spark-Data%20Processing-E25A1C?logo=apachespark&logoColor=white)
+![Databricks](https://img.shields.io/badge/Databricks-Notebooks-FF3621?logo=databricks&logoColor=white)
+![Status](https://img.shields.io/badge/Status-In%20Development-blue)
 
 </div>
 
