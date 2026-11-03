@@ -9,11 +9,19 @@ Framework modular de qualidade de dados em Databricks e PySpark, com profiling, 
 ![Python](https://img.shields.io/badge/Python-PySpark-3776AB?logo=python&logoColor=white)
 ![Apache Spark](https://img.shields.io/badge/Apache%20Spark-Data%20Processing-E25A1C?logo=apachespark&logoColor=white)
 ![Databricks](https://img.shields.io/badge/Databricks-Notebooks-FF3621?logo=databricks&logoColor=white)
-![Status](https://img.shields.io/badge/Status-In%20Development-blue)
+![Status](https://img.shields.io/badge/Status-Em%20desenvolvimento-blue)
 
 </div>
 
 **Status:** notebooks desenvolvidos de forma incremental; execução integrada e prontidão para produção ainda não validadas. O módulo 13 foi adiado.
+
+## Demonstração do Framework — MVP de 15 segundos
+
+[![Assistir ao MVP conversacional de Data Quality](video_mvp/mvp_preview.png)](video_mvp/mvp_data_quality_15s.mp4)
+
+**[▶ Assistir à demonstração de 15 segundos](video_mvp/mvp_data_quality_15s.mp4)**
+
+O vídeo ilustra a experiência de consulta conversacional de qualidade de dados, com perguntas, respostas apoiadas em evidências e rastreabilidade. **Protótipo visual com dados simulados; não representa uma gravação de execução real no Databricks.**
 
 ## Princípios de projeto
 
